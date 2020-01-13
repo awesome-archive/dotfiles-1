@@ -5,7 +5,7 @@ export ZSH=~/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="gentoo"
+ZSH_THEME="crispy"
 
 # Uncomment the following line to use case-sensitive completion.
 CASE_SENSITIVE="true"
@@ -18,7 +18,7 @@ CASE_SENSITIVE="true"
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+export UPDATE_ZSH_DAYS=30
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -54,7 +54,7 @@ plugins=(brew docker emoji gem git golang heroku osx redis-cli zsh_reload)
 # User configuration
 source $ZSH/oh-my-zsh.sh
 export LANG=en_US.UTF-8
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # Go
 export GOROOT=`brew --prefix go`/libexec
@@ -64,7 +64,9 @@ export GOPATH=~/go
 export PATH=$PATH:$GOPATH/bin
 
 # Alias
+alias vim="nvim"
 alias bc="bc -q -l"
+alias zshconf="nvim ~/.zshrc"
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

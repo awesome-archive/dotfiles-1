@@ -1,46 +1,62 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e
 
-# install major applications with homebrew
+echo "Install Homebrew"
 if test ! $(which brew); then
   echo "Installing homebrew..."
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
+
+echo "Setup hostname"
+sudo scutil --set HostName david-macbook
+
+echo "Install with Brew Bundle"
+set +e
 brew bundle
+set -e
 
-# make zsh default
+echo "Setup workspace"
+mkdir -p ~/dev
+mkdir -p ~/work
+
+echo "Setup Git"
+cp ./git/work.gitconfig ~/work/.gitconfig
+cp ./git/global.gitconfig ~/.gitconfig
+
+echo "Setup Bash"
+cp ./bash/.bashrc ~/.bashrc
+cp ./bash/.bash_profile ~/.bash_profile
+
+echo "Setup Zsh"
 sudo sh -c 'echo /usr/local/bin/zsh >> /etc/shells'
-chsh -s $(which zsh)
+sudo chsh -s $(which zsh)
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+cp ./zsh/crispy.zsh-theme ~/.oh-my-zsh/themes/
+cp ./zsh/.zshrc ~/
 
-# setup dotfiles
-cp .bash_profile .zshrc .vimrc .gemrc ~/
-mkdir -p ~/.vim
-cp -r zarniwoop.vim/colors ~/.vim/
-
-# fzf
+echo "Setup applications"
+echo "- fzf"
 $(brew --prefix)/opt/fzf/install
+echo "- neovim"
+./neovim/neovim
 
-# link to sublime & vscode
+echo "Link editors"
 mkdir -p ~/Applications/
-sudo ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl ~/Applications/subl
-sudo ln -s /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code ~/Applications/code
-./VSCode/.vscode
+sudo ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
+sudo ln -s /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code /usr/local/bin/code
 
-# ruby
-gem install bundler
-bundle config mirror.https://rubygems.org https://gems.ruby-china.com
+echo "Setup Ruby"
+./ruby/ruby
 
-# go
+echo "Setup Go"
 mkdir -p ~/go
 
-# shadowsocks
-mkdir -p ~/.ShadowsocksX-NG
-cp ./Shadowsocks/user-rule.txt ~/.ShadowsocksX-NG/
+echo "Setup Shadowsocks"
+./Shadowsocks/init
 
-# sync folder
+echo "Setup sync folder"
 mkdir -p ~/sync
 
-# macOS setups
-./.mac
+echo "Setup macOS defaults"
+./mac
